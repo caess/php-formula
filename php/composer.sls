@@ -11,7 +11,7 @@
 {% set salt_user_home = salt['user.info'](salt_user).get('home', '/root') %}
 
 include:
-  - php
+  - php.cli
 {%- for module in php.lookup.get('composer', {}).get('required_modules', []) %}
   - php.{{ module }}
 {%- endfor %}
