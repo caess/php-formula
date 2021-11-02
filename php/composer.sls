@@ -24,7 +24,7 @@ get-composer:
     - source: https://getcomposer.org/installer
     - source_hash: https://composer.github.io/installer.sig
     - require:
-      - pkg: php
+      - sls: php.cli
 
 install-composer:
   cmd.run:
