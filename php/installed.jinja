@@ -20,9 +20,7 @@
               {% set first_version = pillar_php_version[0]|string %}
               {% for other_version in pillar_php_version %}
                 {% set other_version_str = other_version|string %}
-                {% if first_version != other_version_str %}
-                  {% do pkgs.append(pkg.replace(first_version, other_version_str)) %}
-                {% endif %}
+                {% do pkgs.append(pkg.replace(first_version, other_version_str)) %}
               {% endfor %}
             {% endif %}
         {% endif %}
@@ -33,9 +31,7 @@
       {% set first_version = pillar_php_version[0]|string %}
       {% for other_version in pillar_php_version %}
         {% set other_version_str = other_version|string %}
-        {% if first_version != other_version_str %}
-          {% do pkgs.append(pkginfo.replace(first_version, other_version_str)) %}
-        {% endif %}
+        {% do pkgs.append(pkginfo.replace(first_version, other_version_str)) %}
       {% endfor %}
     {% endif %}
 {% endif %}
@@ -108,7 +104,7 @@ php_redhat_scl_enable_{{ state }}:
 php_install_{{ state }}:
   pkg.installed:
     - name: {{ state }}
-    - pkgs: {{ pkgs|json() }}
+    - pkgs: {{ pkgs|unique|json() }}
 {% if enable_php_repo is defined and enable_php_repo %}
     - enablerepo: {{ enable_php_repo }}
 {% endif %}
