@@ -58,7 +58,7 @@ php_ppa_{{ state }}:
       - pkg: php_install_{{ state }}
   pkg.latest:
     - name: {{ state }}
-    - pkgs: {{ pkgs|json() }}
+    - pkgs: {{ pkgs|unique|json() }}
     - refresh: True
     - onchanges:
       - pkgrepo: php_ppa_{{ state }}
