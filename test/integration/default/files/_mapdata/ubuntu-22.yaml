@@ -1,5 +1,5 @@
 # yamllint disable rule:indentation rule:line-length
-# FreeBSD-13
+# Ubuntu-22.04
 ---
 values:
   apache2:
@@ -9,7 +9,13 @@ values:
   cli:
     ini:
       opts: {}
-      settings: {}
+      settings:
+        Assertion:
+          zend.assertions: -1
+        Date:
+          date.timezone: Europe/Paris
+        PHP:
+          default_charset: UTF-8
   fpm:
     config:
       conf:
@@ -17,11 +23,50 @@ values:
         settings: {}
       ini:
         opts: {}
-        settings: {}
+        settings:
+          Assertion:
+            zend.assertions: -1
+          Date:
+            date.timezone: Europe/Paris
+          PHP:
+            cgi.fix_pathinfo: 0
+            default_charset: UTF-8
+            expose_php: 'Off'
     pools:
-      default.conf:
-        enabled: false
-        opts: {}
+      ldap-admin.conf:
+        enabled: true
+        phpversion: '7.3'
+        settings:
+          ldap-admin:
+            catch_workers_output: 'yes'
+            group: www-data
+            listen: /tmp/php-fpm-ldap-admin2.sock
+            listen.mode: '0666'
+            php_admin_value[date.timezone]: Europe/Paris
+            ping.path: /php-ping
+            pm: static
+            pm.max_children: 3
+            pm.max_requests: 500
+            pm.status_path: /php-status
+            security.limit_extensions: .php
+            user: www-data
+      radius-admin.conf:
+        enabled: true
+        phpversion: '5.6'
+        settings:
+          radius-admin:
+            catch_workers_output: 'yes'
+            group: www-data
+            listen: /tmp/php-fpm-radius-admin.sock
+            listen.mode: '0666'
+            php_admin_value[date.timezone]: Europe/Paris
+            ping.path: /php-ping
+            pm: static
+            pm.max_children: 3
+            pm.max_requests: 500
+            pm.status_path: /php-status
+            security.limit_extensions: .php
+            user: www-data
     service:
       enabled: true
       opts: {}
@@ -199,115 +244,147 @@ values:
         soap.wsdl_cache_ttl: 86400
   lookup:
     apache2:
-      ini: /usr/local/etc/php.ini
-      module_config: /usr/local/etc/apache24/modules.d/050_mod_php.conf
-      name: apache24
+      ini: /etc/php/5.6/apache2/php.ini
     cli:
-      ini: /usr/local/etc/php.ini
-    composer:
-      required_modules:
-      - filter
-      - json
-      - mbstring
-      - openssl
-      - phar
+      ini: /etc/php/5.6/cli/php.ini
     fpm:
-      conf: /usr/local/etc/php-fpm.conf
+      conf: /etc/php/5.6/fpm/php-fpm.conf
       defaults:
         global:
-          error_log: log/php-fpm.log
-          pid: run/php-fpm.pid
-        include: /usr/local/etc/php-fpm.d/*.conf
-      group: wheel
-      ini: /usr/local/etc/php.ini
-      pools: /usr/local/etc/php-fpm.d
-      service: php-fpm
+          error_log: /var/log/php5.6-fpm.log
+          pid: /run/php/php5.6-fpm.pid
+        include: /etc/php/5.6/fpm/pool.d/*.conf
+      group: root
+      ini: /etc/php/5.6/fpm/php.ini
+      pools: /etc/php/5.6/fpm/pool.d
+      service: php5.6-fpm
       user: root
+    hhvm:
+      conf: /etc/hhvm/server.ini
+      defaults: {}
+      ini: /etc/hhvm/php.ini
+      php:
+        hhvm.log.always_log_unhandled_exceptions: 'true'
+        hhvm.log.level: Warning
+        hhvm.log.runtime_error_reporting_level: '8191'
+        hhvm.mysql.typed_results: 'false'
+        session.gc_maxlifetime: '1440'
+        session.save_handler: files
+        session.save_path: /var/lib/hhvm/sessions
+      server:
+        hhvm.log.file: /var/log/hhvm/error.log
+        hhvm.log.use_log_file: 'true'
+        hhvm.repo.central.path: /var/run/hhvm/hhvm.hhbc
+        hhvm.server.default_document: index.php
+        hhvm.server.port: '9000'
+        hhvm.server.type: fastcgi
+        pid: /var/run/hhvm/pid
+      service: hhvm
     pkgs:
-      apache2: mod_php74
-      bcmath: php74-bcmath
-      cli: php74
+      adodb: libphp-adodb
+      apache2: libapache2-mod-php5.6
+      apc: php-apcu
+      apcu: php-apcu-bc
+      auth-sasl: php-auth-sasl
+      bcmath: php5.6-bcmath
+      build_pkgs:
+      - libssl-dev
+      - libcurl4-openssl-dev
+      - pkg-config
+      - libsslcommon2-dev
+      - gcc
+      - make
+      - autoconf
+      - libc-dev
+      - pkg-config
+      bz2: php5.6-bz2
+      cache-lite: php-cache-lite
+      cgi: php5.6-cgi
+      cli: php5.6-cli
       composer_bin: composer
-      ctype: php74-ctype
-      curl: php74-curl
-      dom: php74-dom
-      fileinfo: php74-fileinfo
-      filter: php74-filter
-      fpm: php74
-      gd: php74-gd
-      gettext: php74-gettext
-      hash: php74-hash
-      iconv: php74-iconv
-      imagick: php74-pecl-imagick
-      imap: php74-imap
-      intl: php74-intl
-      json: php74-json
-      ldap: php74-ldap
+      console-table: php-console-table
+      curl: php5.6-curl
+      dba: php5.6-dba
+      dev: php5.6-dev
+      ext_conf_path: /etc/php/5.6/mods-available
+      fpm: php5.6-fpm
+      gd: php5.6-gd
+      gearman: php-gearman
+      geoip: php-geoip
+      geshi: php-geshi
+      gettext: php5.6
+      gmp: php5.6-gmp
+      hhvm: hhvm
+      imagick: php-imagick
+      imap: php5.6-imap
+      intl: php5.6-intl
+      json: php5.6-json
+      ldap: php5.6-ldap
       local_bin: /usr/local/bin
-      mbstring: php74-mbstring
-      mcrypt: php74-mcrypt
-      memcached: php74-pecl-memcached
-      mysql: php74-mysqli
-      opcache: php74-opcache
-      openssl: php74-openssl
-      pdo: php74-pdo
-      pdo_mysql: php74-pdo_mysql
-      pear: php74-pear
-      phar: php74-phar
-      php: php74
-      posix: php74-posix
-      session: php74-session
-      simplexml: php74-simplexml
-      snmp: php74-snmp
-      soap: php74-soap
+      mail: php-mail
+      mbstring: php5.6-mbstring
+      mcrypt: php5.6-mcrypt
+      memcache: php-memcache
+      memcached: php-memcached
+      mongo: php-mongo
+      mongodb: php-mongodb
+      mysql: php5.6-mysql
+      mysqlnd: php5.6-mysql
+      net-smtp: php-net-smtp
+      net4: php-net-ipv4
+      net6: php-net-ipv6
+      oauth: php-oauth
+      odbc: php-odbc
+      opcache: php5.6-opcache
+      pear: php-pear
+      pgsql: php5.6-pgsql
+      php: php5.6
+      phpenmod_command: phpenmod -v5.6
+      pspell: php5.6-pspell
+      readline: php5.6-readline
+      redis: php5.6-redis
+      seclib:
+      - php-phpseclib
+      - php-seclib
+      snmp: php5.6-snmp
+      soap: php5.6-soap
+      sqlite: php5.6-sqlite3
+      ssh2: php-ssh2
+      suhosin5_ext: suhosin.so
+      suhosin5_repo: https://github.com/sektioneins/suhosin
+      suhosin7_ext: suhosin7.so
+      suhosin7_repo: https://github.com/sektioneins/suhosin7
+      sybase: php5.6-sybase
+      tcpdf: php-tcpdf
       temp_dir: /tmp
-      tokenizer: php74-tokenizer
-      xdebug: php74-pecl-xdebug
+      tidy: php5.6-tidy
+      xdebug: php-xdebug
       xml:
-      - php74-xml
-      - php74-xmlreader
-      - php74-xmlrpc
-      xmlwriter: php74-xmlwriter
-      xsl: php74-xsl
-      zip: php74-zip
-      zlib: php74-zlib
+      - php5.6-xml
+      - php5.6-xmlrpc
+      xsl: php5.6-xsl
+      zip: php5.6-zip
+  modules:
+  - bz2
+  - cli
+  - curl
+  - gd
+  - imagick
+  - imap
+  - intl
+  - mbstring
+  - mysql
+  - readline
+  - redis
+  - xdebug
+  - xml
+  - zip
+  repo:
+    file: /etc/apt/sources.list.d/php-sury.list
+    humanname: php-sury ppa
+    key_url: https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x14aa40ec0831756756d7f66c4f4ea0aae5267a6c
+    name: deb http://ppa.launchpad.net/ondrej/php/ubuntu jammy main
+  use_external_repo: true
   version:
-  - '7.4'
-  - '8.0'
-  xcache:
-    ini:
-      defaults:
-        xcache:
-          xcache.cacher: 'On'
-          xcache.coredump_directory: '""'
-          xcache.coredump_type: '0'
-          xcache.count: '1'
-          xcache.disable_on_crash: 'Off'
-          xcache.experimental: 'Off'
-          xcache.gc_interval: '0'
-          xcache.mmap_path: '"/dev/zero"'
-          xcache.optimizer: 'Off'
-          xcache.readonly_protection: 'Off'
-          xcache.shm_scheme: '"mmap"'
-          xcache.size: 60M
-          xcache.slots: 8K
-          xcache.stat: 'On'
-          xcache.ttl: '0'
-          xcache.var_count: '1'
-          xcache.var_gc_interval: '300'
-          xcache.var_maxttl: '0'
-          xcache.var_namespace: '""'
-          xcache.var_namespace_mode: '0'
-          xcache.var_size: 4M
-          xcache.var_slots: 8K
-          xcache.var_ttl: '0'
-        xcache-common:
-          extension: xcache.so
-        xcache.admin:
-          xcache.admin.enable_auth: 'On'
-        xcache.coverager:
-          xcache.coveragedump_directory: '""'
-          xcache.coverager: 'Off'
-          xcache.coverager_autostart: 'On'
-      opts: {}
-      settings: {}
+  - '5.6'
+  - '7.3'

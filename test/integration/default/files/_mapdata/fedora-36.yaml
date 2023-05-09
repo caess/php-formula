@@ -1,5 +1,5 @@
 # yamllint disable rule:indentation rule:line-length
-# FreeBSD-13
+# Fedora-36
 ---
 values:
   apache2:
@@ -198,82 +198,93 @@ values:
         soap.wsdl_cache_limit: 5
         soap.wsdl_cache_ttl: 86400
   lookup:
-    apache2:
-      ini: /usr/local/etc/php.ini
-      module_config: /usr/local/etc/apache24/modules.d/050_mod_php.conf
-      name: apache24
     cli:
-      ini: /usr/local/etc/php.ini
-    composer:
-      required_modules:
-      - filter
-      - json
-      - mbstring
-      - openssl
-      - phar
+      ini: /etc/php.ini
     fpm:
-      conf: /usr/local/etc/php-fpm.conf
+      conf: /etc/php-fpm.conf
       defaults:
         global:
-          error_log: log/php-fpm.log
-          pid: run/php-fpm.pid
-        include: /usr/local/etc/php-fpm.d/*.conf
-      group: wheel
-      ini: /usr/local/etc/php.ini
-      pools: /usr/local/etc/php-fpm.d
+          error_log: /var/log/php-fpm/error.log
+          pid: /var/run/php-fpm/php-fpm.pid
+        include: /etc/php-fpm.d/*.conf
+      group: root
+      ini: /etc/php.ini
+      pools: /etc/php-fpm.d
       service: php-fpm
       user: root
     pkgs:
-      apache2: mod_php74
-      bcmath: php74-bcmath
-      cli: php74
+      adodb: php-adodb
+      apc: php-pecl-apc
+      apcu: php-pecl-apcu
+      auth-sasl: php-pear-Auth-SASL
+      bcmath: php-bcmath
+      build_pkgs:
+      - openssl-devel
+      - gcc
+      cache-lite: php-pear-Cache-Lite
+      cgi: php-cgi
+      cli: php-cli
+      composer: composer
       composer_bin: composer
-      ctype: php74-ctype
-      curl: php74-curl
-      dom: php74-dom
-      fileinfo: php74-fileinfo
-      filter: php74-filter
-      fpm: php74
-      gd: php74-gd
-      gettext: php74-gettext
-      hash: php74-hash
-      iconv: php74-iconv
-      imagick: php74-pecl-imagick
-      imap: php74-imap
-      intl: php74-intl
-      json: php74-json
-      ldap: php74-ldap
+      console-table: php-pear-Console-Table
+      curl:
+      - php-common
+      - curl
+      dba:
+      - php-dba
+      - dba
+      dev: php-devel
+      ext_conf_path: /etc/php.d
+      fpm: php-fpm
+      gd: php-gd
+      geoip: php-pecl-geoip
+      geshi: php-geshi
+      gettext: php-php-gettext
+      http: php-pecl-http
+      imagick: php-pecl-imagick
+      imap: php-imap
+      intl: php-intl
+      json: php-common
+      ldap: php-ldap
       local_bin: /usr/local/bin
-      mbstring: php74-mbstring
-      mcrypt: php74-mcrypt
-      memcached: php74-pecl-memcached
-      mysql: php74-mysqli
-      opcache: php74-opcache
-      openssl: php74-openssl
-      pdo: php74-pdo
-      pdo_mysql: php74-pdo_mysql
-      pear: php74-pear
-      phar: php74-phar
-      php: php74
-      posix: php74-posix
-      session: php74-session
-      simplexml: php74-simplexml
-      snmp: php74-snmp
-      soap: php74-soap
+      mail: php-pear-Mail
+      mbstring: php-mbstring
+      mcrypt: php-mcrypt
+      memcache: php-pecl-memcache
+      memcached: php-pecl-memcached
+      mysql: php-mysql
+      mysqlnd: php-mysqlnd
+      net-smtp: php-pear-Net-SMTP
+      net4: php-pear-Net-IPv4
+      oauth: php-pecl-oauth
+      opcache: php-pecl-zendopcache
+      pear: php-pear
+      pgsql: php-pgsql
+      php: php
+      pspell: php-pspell
+      redis: php-pecl-redis
+      seclib: php-phpseclib
+      snmp: php-snmp
+      soap: php-soap
+      sqlite: php-pdo
+      ssh2: php-pecl-ssh2
+      suhosin5_ext: suhosin.so
+      suhosin5_repo: https://github.com/sektioneins/suhosin
+      suhosin7_ext: suhosin7.so
+      suhosin7_repo: https://github.com/sektioneins/suhosin7
+      tcpdf: php-tcpdf
       temp_dir: /tmp
-      tokenizer: php74-tokenizer
-      xdebug: php74-pecl-xdebug
+      tidy: php-tidy
+      uuid: php-pecl-uuid
+      xcache: php-xcache
+      xdebug: php-pecl-xdebug
       xml:
-      - php74-xml
-      - php74-xmlreader
-      - php74-xmlrpc
-      xmlwriter: php74-xmlwriter
-      xsl: php74-xsl
-      zip: php74-zip
-      zlib: php74-zlib
-  version:
-  - '7.4'
-  - '8.0'
+      - php-xml
+      - php-xmlrpc
+      xsl: php-xml
+      zip: php
+    xcache:
+      ini: /etc/php.d/xcache.ini
   xcache:
     ini:
       defaults:
