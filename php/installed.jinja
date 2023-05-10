@@ -20,9 +20,7 @@
               {% set first_version = pillar_php_version[0]|string %}
               {% for other_version in pillar_php_version %}
                 {% set other_version_str = other_version|string %}
-                {% if max_version is undefined or (max_version is defined and other_version_str <= max_version) %}
-                  {% do pkgs.append(pkg.replace(first_version, other_version_str)) %}
-                {% endif %}
+                {% do pkgs.append(pkg.replace(first_version, other_version_str)) %}
               {% endfor %}
             {% endif %}
         {% endif %}
@@ -33,9 +31,7 @@
       {% set first_version = pillar_php_version[0]|string %}
       {% for other_version in pillar_php_version %}
         {% set other_version_str = other_version|string %}
-        {% if max_version is undefined or (max_version is defined and other_version_str <= max_version) %}
-          {% do pkgs.append(pkginfo.replace(first_version, other_version_str)) %}
-        {% endif %}
+        {% do pkgs.append(pkginfo.replace(first_version, other_version_str)) %}
       {% endfor %}
     {% endif %}
 {% endif %}
